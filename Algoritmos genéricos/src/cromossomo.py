@@ -33,3 +33,11 @@ class Cromossomo:
         print('Geracao...', numero_geracao)
         for individuo in populacao:
             print(individuo)
+
+    @staticmethod
+    def selecionar(populacao, nova_populacao, taxa_selecao):
+        pass
+
+    @staticmethod
+    def reproduzir(populacao, nova_populacao, taxa_reproducao):
+        pass
