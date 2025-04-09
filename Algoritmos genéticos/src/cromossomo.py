@@ -113,3 +113,17 @@ class Cromossomo:
             #podar os excedentes
             while(len(nova_populacao) < len(populacao)):
                 nova_populacao.pop()
+  
+    @staticmethod
+    def mutar(populacao, estado_final):
+        quantidade_mutantes = random.randrange(int(len(populacao)/5)) #Mutar até 20%
+        print('Quantidade de mutantes:', quantidade_mutantes)
+
+          for i in range(quantidade_mutantes):
+            mutante = populacao[random.randrange(len(populacao))]
+            print('Antes da mutação..', mutante)
+            posicao_gene_mutante = random.randrange(len(mutante.palavra))
+            novo_gene = Util.letras[random.randrange(Util.tamanho)]
+            nova_apalvra = mutante.palavra[:4] + "@"
+            mutante.calcular_aptidao(estado_final)
+            print('Mutacao:', mutante)
