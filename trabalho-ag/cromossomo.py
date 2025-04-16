@@ -7,25 +7,26 @@ class Cromossomo:
 
     # Representa a heurística dinâmica da solução
     def calcular_aptidao(self):
-        nota = 0
-        # Penalidade pela ordem incorreta
-        for i in range(len(self.rota) - 1):
-            if self.rota[i] > self.rota[i + 1]:
-                nota += 10
+      nota = 0
 
-        # Penalidade pela repetição
-        repetidos = 0
-        vistos = set() #Para armazenar as cidades já vistas e nao permitir duplicatas
-        for cidade in self.rota:
-            if cidade in vistos:
-                repetidos += 1
-            else:
-                vistos.add(cidade)
+      # Penalidade pela ordem incorreta
+      for i in range(len(self.rota) - 1):
+          if self.rota[i] > self.rota[i + 1]:
+              nota += 10
 
-        if repetidos > 0:
-            nota += 20 * repetidos
+      # Penalidade pela repetição (sem usar set)
+      vistos = []
+      repetidos = 0
+      for cidade in self.rota:
+          if cidade in vistos:
+              repetidos += 1
+          else:
+              vistos.append(cidade)
 
-        return nota
+      if repetidos > 0:
+          nota += 20 * repetidos
+
+      return nota
     
     def __str__(self):
         return f'{self.rota} - {self.aptidao}'
@@ -86,8 +87,12 @@ class Cromossomo:
 
             corte = len(pai) // 2
 
-            filho1 = pai[:corte] + mae[corte:]
-            filho2 = mae[:corte] + pai[corte:]
+            # filho1 = pai[:corte] + mae[corte:]
+            # filho2 = mae[:corte] + pai[corte:]
+
+            ###Tentei algumas solucoes e a unica que funcionou foi essa que achei
+            filho1 = pai[:corte] + [gene for gene in mae if gene not in pai[:corte]]
+            filho2 = mae[:corte] + [gene for gene in pai if gene not in mae[:corte]]
 
             nova_populacao.append(Cromossomo(filho1))
             nova_populacao.append(Cromossomo(filho2))
@@ -104,14 +109,14 @@ class Cromossomo:
             posicao_mutante = random.randrange(len(populacao))
             mutante = populacao[posicao_mutante]
             
-            print(f"Vai mutar o cromossomo: {mutante}")
+            print("Mutando o cromossomo: ",  mutante)
 
             # Mudando
             rota_mutante = mutante.rota[:]
             # Seleciona dois índices aleatórios para trocar
             # Garante que os índices sejam diferentes
-            i, j = random.sample(range(len(rota_mutante)), 2)
-            rota_mutante[i], rota_mutante[j] = rota_mutante[j], rota_mutante[i]
+            posicao1, posicao2 = random.sample(range(len(rota_mutante)), 2)
+            rota_mutante[posicao1], rota_mutante[posicao2] = rota_mutante[posicao2], rota_mutante[posicao1]
             mutante_mutado = Cromossomo(rota_mutante)
 
             populacao[posicao_mutante] = mutante_mutado
